@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import Router from "./Router";
+import React from "react";
 //style
 import { createGlobalStyle } from "styled-components";
+import ToDoList from "./ToDoList";
 
 const GlobalStyle = createGlobalStyle`
   /* http://meyerweb.com/eric/tools/css/reset/ 
@@ -58,8 +58,6 @@ table {
 body {
   font-weight: 300;
   font-family: 'Source Sans Pro', sans-serif;
-  background-color:${(props) => props.theme.bgColor};
-  color:${(props) => props.theme.textColor};
   line-height: 1.2;
 }
 a {
@@ -72,7 +70,7 @@ function App() {
   return (
     <>
       <GlobalStyle />
-      <Router />
+      <ToDoList />
     </>
   );
 }
