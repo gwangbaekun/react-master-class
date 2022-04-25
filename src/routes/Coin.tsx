@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
+import { Helmet } from "react-helmet";
 
 const Title = styled.h1`
   font-size: 48px;
@@ -142,7 +143,10 @@ function Coin() {
 
   const { isLoading: tickerLoading, data: tickerData } = useQuery<IPriceData>(
     ["price", coinId],
-    () => fetchCoinTickers(coinId!)
+    () => fetchCoinTickers(coinId!),
+    {
+      refetchInterval: 5000,
+    }
   );
 
   const priceMatch = useMatch(`/:coinId/price`);
@@ -150,6 +154,9 @@ function Coin() {
 
   return (
     <Container>
+      <Helmet>
+        <title>{infoData?.name ? infoData.name : "Loading..."}</title>
+      </Helmet>
       <Header>
         <Title>{coinId || "Loading..."}</Title>
       </Header>
@@ -167,8 +174,8 @@ function Coin() {
               <span>${infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{infoData?.open_source ? "Yes" : "No"}</span>
+              <span>Price:</span>
+              <span>${tickerData?.quotes.USD.price.toFixed(3)}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
@@ -192,7 +199,7 @@ function Coin() {
           <Link to={`/${coinId}/price`}>Price</Link>
         </Tab>
       </Tabs>
-      <Outlet />
+      <Outlet context={{ coinId }} />
     </Container>
   );
 }
