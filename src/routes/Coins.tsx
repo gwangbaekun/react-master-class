@@ -1,7 +1,9 @@
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
+import { isDarkAtom } from "../atoms";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -65,6 +67,8 @@ interface ICoin {
 
 function Coins() {
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
+  const setterFn = useSetRecoilState(isDarkAtom);
+
   // useEffect(() => {
   //   (async () => {
   //     const response = await (
@@ -82,6 +86,9 @@ function Coins() {
     <Container>
       <Header>
         <Title>COINS</Title>
+        <button onClick={() => setterFn((current) => !current)}>
+          Toggle Mode
+        </button>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>
