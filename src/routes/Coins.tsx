@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { fetchCoins } from "../api";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -51,7 +52,7 @@ const Img = styled.img`
   margin-right: 10px;
 `;
 
-interface CoinInterface {
+interface ICoin {
   id: string;
   name: string;
   symbol: string;
@@ -62,18 +63,16 @@ interface CoinInterface {
 }
 
 function Coins() {
-  const [coins, setCoins] = useState<CoinInterface[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    (async () => {
-      const response = await (
-        await fetch("https://api.coinpaprika.com/v1/coins")
-      ).json();
-      setCoins(response.slice(0, 100));
-      setLoading(false);
-    })();
-  }, []);
+  const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
+  // useEffect(() => {
+  //   (async () => {
+  //     const response = await (
+  //       await fetch("https://api.coinpaprika.com/v1/coins")
+  //     ).json();
+  //     setCoins(response.slice(0, 100));
+  //     setLoading(false);
+  //   })();
+  // }, []);
   // 요부분 작성해야할듯
   // ()? // 비동기 함수를 음 동기로 바꾸는 방법
   // const response = await fetch("https://api.coinpaprika.com/v1/coins").json() 은 왜 안됨?
@@ -83,25 +82,23 @@ function Coins() {
       <Header>
         <Title>COINS</Title>
       </Header>
-      <CoinsList>
-        {loading ? (
-          <Loader>Loading...</Loader>
-        ) : (
-          <>
-            {coins.map((coin) => (
-              <Coin key={`${coin.id}`}>
-                <Link to={`/${coin.id}`} state={coin.name}>
-                  <Img
-                    alt="crypto img"
-                    src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`}
-                  />
-                  {coin.name} &rarr;
-                </Link>
-              </Coin>
-            ))}
-          </>
-        )}
-      </CoinsList>
+      {isLoading ? (
+        <Loader>Loading...</Loader>
+      ) : (
+        <CoinsList>
+          {data?.slice(0, 100).map((coin) => (
+            <Coin key={`${coin.id}`}>
+              <Link to={`/${coin.id}`} state={coin.name}>
+                <Img
+                  alt="crypto img"
+                  src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`}
+                />
+                {coin.name} &rarr;
+              </Link>
+            </Coin>
+          ))}
+        </CoinsList>
+      )}
     </Container>
   );
 }
