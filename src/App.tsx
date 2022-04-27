@@ -34,6 +34,10 @@ function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
   const onDragEnd = (info: DropResult) => {
     const { destination, draggableId, source } = info;
+    if (destination?.droppableId === "category") {
+      console.log(info);
+      return;
+    }
     if (!destination) return;
     if (destination?.droppableId === "trash") {
       setToDos((prev) => {
@@ -77,6 +81,10 @@ function App() {
     }
   };
 
+  const onDragBoardEnd = (info: DropResult) => {
+    console.log(info);
+  };
+
   useEffect(() => {
     setToDos(getLocalToDos());
   }, []);
@@ -88,13 +96,10 @@ function App() {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <AddBoard />
-      <Droppable
-        droppableId={"category"}
-        type={"category"}
-        direction={"horizontal"}
-      >
+      <Droppable droppableId={"category"}>
         {(p) => (
           <Wrapper ref={p.innerRef} {...p.droppableProps}>
+            {p.placeholder}
             <Boards>
               {Object.keys(toDos).map((boardId, index) => (
                 <Board
@@ -102,13 +107,13 @@ function App() {
                   index={index}
                   boardId={boardId}
                   toDos={toDos[boardId]}
-                />
+                ></Board>
               ))}
             </Boards>
-            <Trash />
           </Wrapper>
         )}
       </Droppable>
+      <Trash />
     </DragDropContext>
   );
 }

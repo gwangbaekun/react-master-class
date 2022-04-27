@@ -81,36 +81,44 @@ function Board({ toDos, boardId, index }: IBoardProps) {
   };
   return (
     <>
-      <Wrapper>
-        <Title>{boardId}</Title>
-        <Form onSubmit={handleSubmit(onValid)}>
-          <input
-            {...register("toDo", { required: true })}
-            type="text"
-            placeholder={`Add task on ${boardId}`}
-          />
-        </Form>
-        <Droppable droppableId={boardId}>
-          {(magic, info) => (
-            <Area
-              isDraggingOver={info.isDraggingOver}
-              isDraggingFromThis={Boolean(info.draggingFromThisWith)}
-              ref={magic.innerRef}
-              {...magic.droppableProps}
-            >
-              {toDos.map((toDo, index) => (
-                <DraggableCard
-                  key={toDo.id}
-                  index={index}
-                  toDoId={toDo.id}
-                  toDoText={toDo.text}
-                />
-              ))}
-              {magic.placeholder}
-            </Area>
-          )}
-        </Droppable>
-      </Wrapper>
+      <Draggable draggableId={`category-${boardId}`} index={index}>
+        {(p, s) => (
+          <Wrapper
+            ref={p.innerRef}
+            {...p.dragHandleProps}
+            {...p.draggableProps}
+          >
+            <Title>{boardId}</Title>
+            <Form onSubmit={handleSubmit(onValid)}>
+              <input
+                {...register("toDo", { required: true })}
+                type="text"
+                placeholder={`Add task on ${boardId}`}
+              />
+            </Form>
+            <Droppable droppableId={boardId}>
+              {(magic, info) => (
+                <Area
+                  isDraggingOver={info.isDraggingOver}
+                  isDraggingFromThis={Boolean(info.draggingFromThisWith)}
+                  ref={magic.innerRef}
+                  {...magic.droppableProps}
+                >
+                  {toDos.map((toDo, index) => (
+                    <DraggableCard
+                      key={toDo.id}
+                      index={index}
+                      toDoId={toDo.id}
+                      toDoText={toDo.text}
+                    />
+                  ))}
+                  {magic.placeholder}
+                </Area>
+              )}
+            </Droppable>
+          </Wrapper>
+        )}
+      </Draggable>
     </>
   );
 }
