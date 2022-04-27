@@ -30,15 +30,21 @@ const boxVariants = {
     scale: 1.5,
     borderRadius: "100px",
   },
+  drag: {
+    backgroundColor: "rgba(30,30,30,0.5)",
+    transition: { duration: 10 },
+  },
 };
 
 function App() {
   return (
     <Wrapper>
       <Box
+        drag
         variants={boxVariants}
-        whileHover={boxVariants.hover}
-        whileTap={boxVariants.onclick}
+        whileHover="hover"
+        whileTap="onClick"
+        whileDrag="drag"
       />
     </Wrapper>
   );
