@@ -3,10 +3,9 @@ import { DefaultTheme } from "styled-components";
 import { createGlobalStyle } from "styled-components";
 
 export const darkTheme: DefaultTheme = {
-  bgColor: "#2f3640",
-  textColor: "white",
-  accentColor: "#9c88ff",
-  cardBgColor: "transparent",
+  bgColor: "#3F8CF2",
+  boardColor: "#DADFE9",
+  cardColor: "white",
 };
 
 export const GlobalStyle = createGlobalStyle`
@@ -62,8 +61,10 @@ table {
   box-sizing: border-box;
 }
 body {
-  font-weight: 300;
+	font-weight: 300;
   font-family: 'Source Sans Pro', sans-serif;
+  background-color:${(props) => props.theme.bgColor};
+  color:black;
   line-height: 1.2;
 }
 a {
